@@ -63,18 +63,19 @@ and then just execute `npm start` and go to `http://localhost:8080`.
 ### POST, PUT, DELETE Routes
 
 You might want to define routes that handle other types of requests than just GET.  
-To do that, simply export two variables from your file - `type` that defines route type and `handler` that handles the route.  
-Here's a basic example of POST handler:
+To do that, simply export functions named after the method you want to use.  
+Here's a basic example of all possible handlers:
 
 ```js
-// routes/post.js - route will be POST /post
-// say we want this to be POST request handler
-exports.type = 'post';
-
-// define handler
-exports.handler = (req, res) => {
-  res.send({accepted: true, body: req.body});
-};
+// routes/methods.js - /methods route will accept GET, POST, PUT, DELETE
+// get handler
+exports.get = (req, res) => res.send('i am normal get handler');
+// post handler
+exports.post = (req, res) => res.send({method: 'post', body: req.body});
+// put handler
+exports.put = (req, res) => res.send({method: 'put', body: req.body});
+// delete handler
+exports.delete = (req, res) => res.send('i am delete handler');
 ```
 
 ### Custom Routes
