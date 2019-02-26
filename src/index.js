@@ -25,26 +25,6 @@ const setup = async () => {
 };
 exports.setup = setup;
 
-// CLI config
-
-exports.command = '*';
-exports.describe = 'start server';
-exports.builder = {
-  port: {
-    alias: 'p',
-    description: 'Start server at specified port',
-    type: 'number',
-  }
-}
-
-exports.handler = async ({ port = 8080 }) => {
-  if (isNaN(port)) {
-    console.error('Invalid port');
-    process.exit(1);
-  }
-  start(port);
-};
-
 // start function, starts server
 const start = async (port = 8080) => {
   await setup();
