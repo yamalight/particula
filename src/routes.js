@@ -13,6 +13,10 @@ const wrapMiddleware = (app, fn) => {
 
 // loads and sets up all user routes
 const setupRoutes = app => {
+  // if middleware path doesn't exist - throw an error
+  if (!fs.existsSync(routesPath)) {
+    throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
+  }
   // load routes
   const routesFiles = fs.readdirSync(routesPath);
   for (const fileName of routesFiles) {
