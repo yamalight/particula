@@ -32,7 +32,6 @@ Options:
 let port = 8080;
 if (args['--port']) {
   port = parseInt(args['--port'], 10);
-  console.log(port);
   if (isNaN(port)) {
     console.error('Invalid port');
     process.exit(1);
