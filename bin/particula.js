@@ -1,14 +1,11 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
+const pkg = require('../package.json');
+const {start} = require('../index.js');
 
-const { start } = require('../index.js');
-
-const package = require('../package.json');
-
-// CLI config
-
+/* eslint no-unused-expressions: off */
 yargs
-  .version(package.version)
+  .version(pkg.version)
   .help()
   .command({
     command: '*',
@@ -17,15 +14,14 @@ yargs
       port: {
         alias: 'p',
         description: 'Start server at specified port',
-        type: 'number'
-      }
+        type: 'number',
+      },
     },
-    handler({ port }) {
+    handler({port}) {
       if (isNaN(port)) {
         console.error('Invalid port');
         process.exit(1);
       }
       start(port);
-    }
+    },
   }).argv;
-

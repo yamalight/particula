@@ -5,6 +5,9 @@
   "bin": "bin/particula.js",
   "author": "Tim Ermilov <yamalight@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/** bin/**"
+  },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
