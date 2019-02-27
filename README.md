@@ -18,6 +18,14 @@ The project has two simple goals:
 1. Use sensible defaults and best practices for Express.js out of the box
 2. Allow devs to focus on business logic, not framework setup
 
+## Features
+
+- POST/PUT/DELETE methods enabled by default
+- Helmet enabled by default
+- Async routes support out-of-the-box
+- Routes hot-reload (in development mode)
+- Full error stack traces on request (in development mode)
+
 ## How to use
 
 ### Setup
@@ -43,9 +51,7 @@ Now, your file-system is the main API. Every `.js` file becomes an Express route
 Populate `./routes/index.js` inside your project:
 
 ```js
-function home(req, res) {
-  res.send('Welcome to particula.js!');
-}
+const home = (req, res) => res.send('Welcome to particula.js!');
 
 module.exports = home;
 ```

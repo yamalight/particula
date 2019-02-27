@@ -12,6 +12,11 @@ const routesMap = {};
 // user for failed route init and deleted routes
 const dummyRouter = (req, res, next) => next();
 
+const asyncWrapper = fn => (req, res, next) => {
+  const fnReturn = fn(req, res, next);
+  return Promise.resolve(fnReturn).catch(next);
+};
+
 // converts file name to route name
 const fileNameToRoute = fileName => {
   const fileBaseName = fileName.replace(/\.js$/, '');
@@ -25,12 +30,12 @@ const applyFile = (app, fileName) => {
   const routeHandler = require(require.resolve(path.join(routesPath, fileName)));
 
   if (typeof routeHandler.default === 'function') {
-    app.get(routeName, routeHandler.default);
+    app.get(routeName, asyncWrapper(routeHandler.default));
     return;
   }
 
   if (typeof routeHandler === 'function') {
-    app.get(routeName, routeHandler);
+    app.get(routeName, asyncWrapper(routeHandler));
     return;
   }
 
@@ -49,7 +54,7 @@ const applyFile = (app, fileName) => {
   }
 
   methods.forEach(method => {
-    app[method](routeName, routeHandler[method]);
+    app[method](routeName, asyncWrapper(routeHandler[method]));
   });
 };
 
@@ -61,12 +66,12 @@ const loadFile = (app, fileName) => {
   const router = express.Router();
 
   if (typeof routeHandler.default === 'function') {
-    router.get(routeName, routeHandler.default);
+    router.get(routeName, asyncWrapper(routeHandler.default));
     return {router, routeName};
   }
 
   if (typeof routeHandler === 'function') {
-    router.get(routeName, routeHandler);
+    router.get(routeName, asyncWrapper(routeHandler));
     return {router, routeName};
   }
 
@@ -83,7 +88,7 @@ const loadFile = (app, fileName) => {
   }
 
   methods.forEach(method => {
-    router[method](routeName, routeHandler[method]);
+    router[method](routeName, asyncWrapper(routeHandler[method]));
   });
 
   return {router, routeName};
