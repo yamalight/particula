@@ -1,11 +1,11 @@
 # Particula
 
-> Express Framework
+> Zero-config Express.js Framework
 
 [![npm](https://img.shields.io/npm/v/particula.svg)](https://www.npmjs.com/package/particula)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://opensource.org/licenses/MIT)
 
-Particula is an Express.js based web framework inspired by [Next.js](https://nextjs.org/).
+Particula is a zero-config Express.js-based web framework.
 
 ## ⚠️Warning!⚠️
 
@@ -17,14 +17,6 @@ The project has two simple goals:
 
 1. Use sensible defaults and best practices for Express.js out of the box
 2. Allow devs to focus on business logic, not framework setup
-
-## Roadmap
-
-- [ ] Add error handling and error page
-- [ ] Add 404 page
-- [ ] Add tests
-- [ ] Tools for testing Particula-based apps
-- [ ] Examples of basic apps (hello world, complex, with auth, with babel, etc)
 
 ## How to use
 
