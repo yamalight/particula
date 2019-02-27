@@ -15,6 +15,7 @@ yargs
         alias: 'p',
         description: 'Start server at specified port',
         type: 'number',
+        default: 8080,
       },
     },
     handler({port}) {
