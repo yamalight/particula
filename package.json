@@ -1,6 +1,6 @@
 {
   "name": "particula",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "main": "index.js",
   "bin": "bin/particula.js",
   "author": "Tim Ermilov <yamalight@gmail.com>",
@@ -8,6 +8,11 @@
   "scripts": {
     "lint": "eslint src/** bin/**"
   },
+  "files": [
+    "bin/*.js",
+    "src/*.js",
+    "index.js"
+  ],
   "dependencies": {
     "arg": "^4.1.0",
     "body-parser": "^1.18.3",
