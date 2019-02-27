@@ -27,6 +27,9 @@ const loadConfig = () => {
   }
 
   config = require(projectConfigPath);
+  if (!config.plugins) {
+    config.plugins = [];
+  }
   return config;
 };
 
