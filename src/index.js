@@ -11,8 +11,8 @@ const setup = async () => {
   await setupPlugins(app);
   setupMiddleware(app);
   setupRoutes(app);
-  setupErrorHandling(app);
   await postsetupPlugins(app);
+  setupErrorHandling(app);
   return app;
 };
 exports.setup = setup;
