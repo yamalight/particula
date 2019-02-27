@@ -20,6 +20,40 @@ const fileNameToRoute = fileName => {
 };
 
 // loads given file into router
+const applyFile = (app, fileName) => {
+  const routeName = fileNameToRoute(fileName);
+  const routeHandler = require(require.resolve(path.join(routesPath, fileName)));
+
+  if (typeof routeHandler.default === 'function') {
+    app.get(routeName, routeHandler.default);
+    return;
+  }
+
+  if (typeof routeHandler === 'function') {
+    app.get(routeName, routeHandler);
+    return;
+  }
+
+  if (routeHandler.useRouter && typeof routeHandler.useRouter === 'function') {
+    const router = express.Router();
+    router.app = app;
+    routeHandler.useRouter(router);
+    app.use(router);
+    return;
+  }
+
+  const allowedMethods = ['put', 'get', 'post', 'delete'];
+  const methods = Object.keys(routeHandler);
+  if (!methods.some(method => allowedMethods.includes(method))) {
+    throw new Error(`Route definition doesn't match possible formats`);
+  }
+
+  methods.forEach(method => {
+    app[method](routeName, routeHandler[method]);
+  });
+};
+
+// loads given file into router
 const loadFile = (app, fileName) => {
   const routeName = fileNameToRoute(fileName);
   const routeHandler = require(path.join(routesPath, fileName));
@@ -115,24 +149,33 @@ const setupHotReload = app => {
 
 // loads and sets up all user routes
 const setupRoutes = app => {
-  // if middleware path doesn't exist - throw an error
-  if (!fs.existsSync(routesPath)) {
-    throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
-  }
-
-  // load routes into memory
   const routesFiles = fs.readdirSync(routesPath);
-  for (const fileName of routesFiles) {
-    const {router, routeName} = loadFile(app, fileName);
-    routesMap[routeName] = {router, register: undefined};
+
+  // setup routes with hot reload if not running in production
+  if (process.env.NODE_ENV !== 'production') {
+    // if middleware path doesn't exist - throw an error
+    if (!fs.existsSync(routesPath)) {
+      throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
+    }
+
+    // load routes into memory
+    for (const fileName of routesFiles) {
+      const {router, routeName} = loadFile(app, fileName);
+      routesMap[routeName] = {router, register: undefined};
+    }
+
+    // add routes to express
+    registerRoutes(app);
+
+    // setup hot reload
+    setupHotReload(app);
+    return;
   }
 
-  // add routes to express
-  registerRoutes(app);
-
-  // setup hot reload if not running in production
-  if (process.env.NODE_ENV !== 'production') {
-    setupHotReload(app);
+  // when running in production
+  // load routes into server directly
+  for (const fileName of routesFiles) {
+    applyFile(app, fileName);
   }
 };
 
