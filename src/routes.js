@@ -110,8 +110,9 @@ const registerRoutes = app => {
 
 // sets up hot reload for routes
 const setupHotReload = app => {
-  chokidar
-    .watch(path.join(routesPath, '*.js'), {ignoreInitial: true})
+  const watcher = chokidar.watch(path.join(routesPath, '*.js'), {ignoreInitial: true});
+
+  watcher
     .on('add', fullpath => {
       try {
         const {base: fileName} = path.parse(fullpath);
@@ -150,6 +151,8 @@ const setupHotReload = app => {
         console.error('Error removing route:', e);
       }
     });
+
+  return watcher;
 };
 
 // loads and sets up all user routes
@@ -173,8 +176,7 @@ const setupRoutes = app => {
     registerRoutes(app);
 
     // setup hot reload
-    setupHotReload(app);
-    return;
+    return setupHotReload(app);
   }
 
   // when running in production
