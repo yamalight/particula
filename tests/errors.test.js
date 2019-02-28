@@ -26,9 +26,21 @@ test('Should handle 500 errors in development', async done => {
     .get('/')
     .expect(500);
 
+  // replace local paths
   const currentPath = path.resolve(__dirname).replace('/tests', '');
   const pathRegex = new RegExp(currentPath, 'g');
-  const cleanText = text.replace(pathRegex, '');
+
+  // replace possible mismatching stack traces
+  const stack1 = /at Server.emit \(events.js:.+?\)/g;
+  const stack2 = /at parserOnIncoming \(_http_server.js:.+?\)/g;
+  const stack3 = /at HTTPParser.parserOnHeadersComplete \(_http_common.js:.+?\)/g;
+
+  // replace all things
+  const cleanText = text
+    .replace(pathRegex, '')
+    .replace(stack1, '')
+    .replace(stack2, '')
+    .replace(stack3, '');
 
   expect(cleanText).toMatchSnapshot();
 
