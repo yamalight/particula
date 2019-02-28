@@ -1,4 +1,5 @@
 /* eslint-env jest */
+const path = require('path');
 const express = require('express');
 const request = require('supertest');
 const {setupErrorHandling} = require('../src/express');
@@ -24,7 +25,12 @@ test('Should handle 500 errors in development', async done => {
   const {text} = await request(app)
     .get('/')
     .expect(500);
-  expect(text).toMatchSnapshot();
+
+  const currentPath = path.resolve(__dirname).replace('/tests', '');
+  const pathRegex = new RegExp(currentPath, 'g');
+  const cleanText = text.replace(pathRegex, '');
+
+  expect(cleanText).toMatchSnapshot();
 
   done();
 });
