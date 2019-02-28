@@ -2,6 +2,7 @@
 
 > Zero-config Express.js Framework
 
+[![CircleCI](https://circleci.com/gh/particulajs/particula.svg?style=svg)](https://circleci.com/gh/particulajs/particula)
 [![npm](https://img.shields.io/npm/v/particula.svg)](https://www.npmjs.com/package/particula)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://opensource.org/licenses/MIT)
 
