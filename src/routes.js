@@ -133,7 +133,7 @@ const setupHotReload = app => {
     })
     .on('change', fullpath => {
       try {
-        const {base: fileName} = path.parse(fullpath);
+        const fileName = fullpath.replace(routesPath, '');
         // delete cached required script
         delete require.cache[fullpath];
         // load new version

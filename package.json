@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src/** bin/**",
-    "test": "NODE_ENV=particula-testing jest --coverage --ci --runInBand tests/**"
+    "test": "jest --coverage --ci --runInBand tests/**"
   },
   "files": [
     "bin/*.js",
