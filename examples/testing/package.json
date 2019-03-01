@@ -1,0 +1,16 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "particula",
+    "test": "NODE_ENV=testing jest"
+  },
+  "dependencies": {
+    "particula": "latest"
+  },
+  "devDependencies": {
+    "jest": "^24.1.0",
+    "superagent": "^4.1.0"
+  }
+}

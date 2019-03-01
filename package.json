@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src/** bin/**",
-    "test": "jest --coverage --ci --runInBand"
+    "test": "jest --coverage --ci --runInBand tests/**"
   },
   "files": [
     "bin/*.js",
