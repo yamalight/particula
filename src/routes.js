@@ -110,6 +110,11 @@ const registerRoutes = app => {
 
 // sets up hot reload for routes
 const setupHotReload = app => {
+  // do not setup hot reload when running in testing mode
+  if (process.env.NODE_ENV === 'testing') {
+    return;
+  }
+
   const watcher = chokidar.watch(path.join(routesPath, '*.js'), {ignoreInitial: true});
 
   watcher
