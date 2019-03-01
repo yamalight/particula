@@ -12,6 +12,8 @@ const indexRoute = require('./fixtures/routes/index');
 const es6Route = require('./fixtures/routes/es6');
 const methodsRoute = require('./fixtures/routes/methods');
 const routerRoute = require('./fixtures/routes/router');
+const nestedIndexRoute = require('./fixtures/routes/nested/index');
+const nestedRoute = require('./fixtures/routes/nested/nest');
 
 // load source for hot reload testing
 const hotRoutePath = path.join(__dirname, 'fixtures', 'routes', 'hot.js');
@@ -80,6 +82,26 @@ test('Should load methods from route', async done => {
     .delete('/methods')
     .expect(200, 'delete');
   expect(methodsRoute.delete).toBeCalled();
+
+  done();
+});
+
+test('Should load nested index route', async done => {
+  await request(app)
+    .get('/nested/')
+    .expect(200, 'nested');
+
+  expect(nestedIndexRoute).toBeCalled();
+
+  done();
+});
+
+test('Should load nested route', async done => {
+  await request(app)
+    .get('/nested/nest')
+    .expect(200, 'nest');
+
+  expect(nestedRoute).toBeCalled();
 
   done();
 });

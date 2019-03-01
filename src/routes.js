@@ -20,7 +20,7 @@ const asyncWrapper = fn => (req, res, next) => {
 // converts file name to route name
 const fileNameToRoute = fileName => {
   const fileBaseName = fileName.replace(/\.js$/, '');
-  const routeName = fileBaseName === 'index' ? '/' : `/${fileBaseName.toLowerCase()}`;
+  const routeName = fileBaseName.toLowerCase().replace('index', '');
   return routeName;
 };
 
@@ -160,9 +160,22 @@ const setupHotReload = app => {
   return watcher;
 };
 
+const getFiles = (folderpath, {base = '/'} = {}) =>
+  fs
+    .readdirSync(folderpath)
+    .map(filename => {
+      const filepath = path.join(folderpath, filename);
+      if (fs.lstatSync(filepath).isDirectory()) {
+        return getFiles(filepath, {base: path.join(base, filename)});
+      }
+
+      return path.join(base, filename);
+    })
+    .flat();
+
 // loads and sets up all user routes
 const setupRoutes = app => {
-  const routesFiles = fs.readdirSync(routesPath);
+  const routesFiles = getFiles(routesPath);
 
   // setup routes with hot reload if not running in production
   if (process.env.NODE_ENV !== 'production') {
