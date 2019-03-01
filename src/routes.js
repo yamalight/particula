@@ -161,9 +161,9 @@ const setupHotReload = app => {
 };
 
 const getFiles = (folderpath, {base = '/'} = {}) =>
-  fs
-    .readdirSync(folderpath)
-    .map(filename => {
+  [].concat.apply(
+    [],
+    fs.readdirSync(folderpath).map(filename => {
       const filepath = path.join(folderpath, filename);
       if (fs.lstatSync(filepath).isDirectory()) {
         return getFiles(filepath, {base: path.join(base, filename)});
@@ -171,7 +171,7 @@ const getFiles = (folderpath, {base = '/'} = {}) =>
 
       return path.join(base, filename);
     })
-    .flat();
+  );
 
 // loads and sets up all user routes
 const setupRoutes = app => {
