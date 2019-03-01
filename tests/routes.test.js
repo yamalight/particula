@@ -111,7 +111,7 @@ test('Should manage routes with hot-reload', async done => {
   fs.writeFileSync(hotRoutePath, hotRouteSource);
 
   // wait for route to update
-  await sleep(500);
+  await sleep(1000);
 
   // test that it works
   await request(app)
@@ -128,7 +128,7 @@ test('Should manage routes with hot-reload', async done => {
   fs.writeFileSync(hotRoutePath, newSource);
 
   // wait for route to update
-  await sleep(500);
+  await sleep(1000);
 
   // test that it works
   await request(app)
@@ -142,7 +142,7 @@ test('Should manage routes with hot-reload', async done => {
   fs.unlinkSync(hotRoutePath);
 
   // wait for route to update
-  await sleep(500);
+  await sleep(1000);
 
   // test that it works
   const {text} = await request(app)

@@ -21,13 +21,13 @@ const asyncWrapper = fn => (req, res, next) => {
 const fileNameToRoute = fileName => {
   const fileBaseName = fileName.replace(/\.js$/, '');
   const routeName = fileBaseName.toLowerCase().replace('index', '');
-  return routeName;
+  return routeName.startsWith('/') ? routeName : `/${routeName}`;
 };
 
 // loads given file into router
 const applyFile = (app, fileName) => {
   const routeName = fileNameToRoute(fileName);
-  const routeHandler = require(require.resolve(path.join(routesPath, fileName)));
+  const routeHandler = require(path.join(routesPath, fileName));
 
   if (typeof routeHandler.default === 'function') {
     app.get(routeName, asyncWrapper(routeHandler.default));
@@ -115,7 +115,7 @@ const setupHotReload = app => {
     return;
   }
 
-  const watcher = chokidar.watch(path.join(routesPath, '*.js'), {ignoreInitial: true});
+  const watcher = chokidar.watch(path.join(routesPath, '**/*.js'), {ignoreInitial: true});
 
   watcher
     .on('add', fullpath => {
@@ -175,15 +175,16 @@ const getFiles = (folderpath, {base = '/'} = {}) =>
 
 // loads and sets up all user routes
 const setupRoutes = app => {
+  // if middleware path doesn't exist - throw an error
+  if (!fs.existsSync(routesPath)) {
+    throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
+  }
+
+  // get files list
   const routesFiles = getFiles(routesPath);
 
   // setup routes with hot reload if not running in production
   if (process.env.NODE_ENV !== 'production') {
-    // if middleware path doesn't exist - throw an error
-    if (!fs.existsSync(routesPath)) {
-      throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
-    }
-
     // load routes into memory
     for (const fileName of routesFiles) {
       const {router, routeName} = loadFile(app, fileName);
