@@ -17,6 +17,7 @@ const nestedRoute = require('./fixtures/routes/nested/nest');
 
 // load source for hot reload testing
 const hotRoutePath = path.join(__dirname, 'fixtures', 'routes', 'hot.js');
+const hotRouteNestedPath = path.join(__dirname, 'fixtures', 'routes', 'nested', 'hot.js');
 const hotRouteSource = fs.readFileSync(path.join(__dirname, 'fixtures', 'hotreload', 'hot.js')).toString();
 
 // sleep util
@@ -150,6 +151,54 @@ test('Should manage routes with hot-reload', async done => {
     .expect(404);
 
   expect(text).toContain('Cannot GET /hot');
+
+  done();
+});
+
+test('Should manage nested routes with hot-reload', async done => {
+  // write inial version
+  fs.writeFileSync(hotRouteNestedPath, hotRouteSource);
+
+  // wait for route to update
+  await sleep(1000);
+
+  // test that it works
+  await request(app)
+    .get('/nested/hot')
+    .expect(200, 'hot-add');
+
+  const initialHotRoute = require(hotRouteNestedPath);
+  expect(initialHotRoute).toBeCalled();
+
+  // reset jest module cache
+  jest.resetModules();
+  // write update source
+  const newSource = hotRouteSource.replace('hot-add', 'hot-change');
+  fs.writeFileSync(hotRouteNestedPath, newSource);
+
+  // wait for route to update
+  await sleep(1000);
+
+  // test that it works
+  await request(app)
+    .get('/nested/hot')
+    .expect(200, 'hot-change');
+
+  const updatedHotRoute = require(hotRouteNestedPath);
+  expect(updatedHotRoute).toBeCalled();
+
+  // remove route
+  fs.unlinkSync(hotRouteNestedPath);
+
+  // wait for route to update
+  await sleep(1000);
+
+  // test that it works
+  const {text} = await request(app)
+    .get('/nested/hot')
+    .expect(404);
+
+  expect(text).toContain('Cannot GET /nested/hot');
 
   done();
 });

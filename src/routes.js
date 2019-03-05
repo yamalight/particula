@@ -115,12 +115,12 @@ const setupHotReload = app => {
     return;
   }
 
-  const watcher = chokidar.watch(path.join(routesPath, '**/*.js'), {ignoreInitial: true});
+  const watcher = chokidar.watch(routesPath, {ignoreInitial: true});
 
   watcher
     .on('add', fullpath => {
       try {
-        const {base: fileName} = path.parse(fullpath);
+        const fileName = fullpath.replace(routesPath, '');
         const routeName = fileNameToRoute(fileName);
         routesMap[routeName] = {router: dummyRouter, register: undefined};
         const {router} = loadFile(app, fileName);
@@ -147,7 +147,7 @@ const setupHotReload = app => {
     })
     .on('unlink', fullpath => {
       try {
-        const {base: fileName} = path.parse(fullpath);
+        const fileName = fullpath.replace(routesPath, '');
         const routeName = fileNameToRoute(fileName);
         routesMap[routeName].router = dummyRouter;
         delete require.cache[fullpath];
