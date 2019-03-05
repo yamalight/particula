@@ -1,3 +1,10 @@
+# 0.7.0 / 2019-03-05
+
+- Rewrite particula to use swappable particula-cores
+- Add support for nested routes
+- Allow disabling hot-reload for tests
+- Add tests
+
 # 0.6.0 / 2019-02-26
 
 - Add basic middleware example
