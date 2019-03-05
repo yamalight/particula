@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should routes map 1`] = `
+Array [
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/es6.js",
+    "routeHandler": Object {
+      "default": [MockFunction],
+    },
+    "routeName": "/es6",
+    "routeType": "esm",
+  },
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/index.js",
+    "routeHandler": [MockFunction],
+    "routeName": "/",
+    "routeType": "module",
+  },
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/methods.js",
+    "routeHandler": Object {
+      "delete": [MockFunction],
+      "get": [MockFunction],
+      "post": [MockFunction],
+      "put": [MockFunction],
+    },
+    "routeName": "/methods",
+    "routeType": "methods",
+  },
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/nested/index.js",
+    "routeHandler": [MockFunction],
+    "routeName": "/nested/",
+    "routeType": "module",
+  },
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/nested/nest.js",
+    "routeHandler": [MockFunction],
+    "routeName": "/nested/nest",
+    "routeType": "module",
+  },
+  Object {
+    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/router.js",
+    "routeHandler": Object {
+      "useRouter": [MockFunction],
+    },
+    "routeName": "/router",
+    "routeType": "router",
+  },
+]
+`;

@@ -1,25 +1,26 @@
-const {setupApp, setupErrorHandling} = require('./express');
-const {setupPlugins, postsetupPlugins} = require('./config');
+const {getCore, setupPlugins, postsetupPlugins} = require('./config');
 const setupMiddleware = require('./middleware');
 const setupRoutes = require('./routes');
 
-// construct new server instance
-const app = setupApp();
+// get user core
+const core = getCore();
+
+// run initial setup
+core.setup();
 
 // setup function, returns express app
 const setup = async () => {
-  await setupPlugins(app);
-  setupMiddleware(app);
-  setupRoutes(app);
-  await postsetupPlugins(app);
-  setupErrorHandling(app);
-  return app;
+  await setupPlugins(core);
+  setupMiddleware(core);
+  setupRoutes(core);
+  await postsetupPlugins(core);
+  return core.postSetup();
 };
 exports.setup = setup;
 
 // start function, starts server
 const start = async (port = 8080) => {
   await setup();
-  app.listen(port, () => console.log(`Started at ${port}`));
+  core.start(port);
 };
 exports.start = start;

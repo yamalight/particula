@@ -5,17 +5,21 @@ jest.spyOn(process, 'cwd').mockReturnValue(path.join(__dirname, 'fixtures'));
 const {setupPlugins, postsetupPlugins} = require('../src/config');
 const testPlugin = require('./fixtures/testPlugin');
 
-const mockApp = {set: jest.fn()};
+const testCore = {
+  setupPlugin: jest.fn(p => p.setup()),
+  postsetupPlugin: jest.fn(p => p.postsetup()),
+};
 
 test('Should run plugin setup', async done => {
-  await setupPlugins(mockApp);
+  await setupPlugins(testCore);
   expect(testPlugin.setup).toBeCalled();
-  expect(mockApp.set).toBeCalledWith(testPlugin.name, testPlugin.data);
+  expect(testCore.setupPlugin).toBeCalledWith(testPlugin);
   done();
 });
 
 test('Should run plugin postsetup', async done => {
-  await postsetupPlugins(mockApp);
+  await postsetupPlugins(testCore);
   expect(testPlugin.postsetup).toBeCalled();
+  expect(testCore.postsetupPlugin).toBeCalledWith(testPlugin);
   done();
 });

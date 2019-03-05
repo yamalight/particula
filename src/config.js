@@ -12,6 +12,7 @@ const projectFolder = process.cwd();
 const routesPath = path.join(projectFolder, 'routes');
 const middlewarePath = path.join(projectFolder, 'middlewares');
 const projectConfigPath = path.join(projectFolder, 'particula.config.js');
+const projectPackagePath = path.join(projectFolder, 'package.json');
 
 // config loading function
 const loadConfig = () => {
@@ -34,22 +35,34 @@ const loadConfig = () => {
 };
 
 // loads the config and runs setup for all plugins
-const setupPlugins = async app => {
+const setupPlugins = async core => {
   const config = loadConfig();
-  await Promise.all(
-    config.plugins
-      .filter(p => p.setup)
-      .map(async plugin => {
-        const pluginData = await plugin.setup(app);
-        app.set(plugin.name, pluginData);
-      })
-  );
+  await Promise.all(config.plugins.filter(p => p.setup).map(p => core.setupPlugin(p)));
 };
 
 // loads the config and runs postsetup for all plugins
-const postsetupPlugins = async app => {
+const postsetupPlugins = async core => {
   const config = loadConfig();
-  await Promise.all(config.plugins.filter(p => p.postsetup).map(plugin => plugin.postsetup(app)));
+  await Promise.all(config.plugins.filter(p => p.postsetup).map(p => core.postsetupPlugin(p)));
+};
+
+// core management
+let core;
+const getCore = () => {
+  if (core) {
+    return core;
+  }
+  const appPackage = require(projectPackagePath);
+  const cores = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-core-'));
+  if (cores.length === 0) {
+    console.error('Error! No cores installed!');
+    process.exit(1);
+  }
+  if (cores.length > 2) {
+    console.warn('Warning! You have more than one particula core in dependencies! Only the first one will be used!');
+  }
+  core = require(cores[0]);
+  return core;
 };
 
 module.exports = {
@@ -57,4 +70,5 @@ module.exports = {
   middlewarePath,
   setupPlugins,
   postsetupPlugins,
+  getCore,
 };

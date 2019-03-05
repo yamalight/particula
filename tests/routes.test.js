@@ -3,17 +3,7 @@ const fs = require('fs');
 const path = require('path');
 jest.spyOn(process, 'cwd').mockReturnValue(path.join(__dirname, 'fixtures'));
 
-const express = require('express');
-const request = require('supertest');
 const setupRoutes = require('../src/routes');
-
-// test routes
-const indexRoute = require('./fixtures/routes/index');
-const es6Route = require('./fixtures/routes/es6');
-const methodsRoute = require('./fixtures/routes/methods');
-const routerRoute = require('./fixtures/routes/router');
-const nestedIndexRoute = require('./fixtures/routes/nested/index');
-const nestedRoute = require('./fixtures/routes/nested/nest');
 
 // load source for hot reload testing
 const hotRoutePath = path.join(__dirname, 'fixtures', 'routes', 'hot.js');
@@ -23,104 +13,50 @@ const hotRouteSource = fs.readFileSync(path.join(__dirname, 'fixtures', 'hotrelo
 // sleep util
 const sleep = time => new Promise(r => setTimeout(r, time));
 
-// create app and setup routes
-const app = express();
+// create test core
+const testCore = {
+  loadRoutes(files) {
+    this.files = files;
+  },
+  hotReload: {
+    add: jest.fn(),
+    change: jest.fn(),
+    delete: jest.fn(),
+  },
+};
+
+// setup routes
 let watcher;
-beforeAll(() => {
-  watcher = setupRoutes(app);
-});
+beforeAll(
+  () =>
+    new Promise(r => {
+      watcher = setupRoutes(testCore);
+      watcher.on('ready', r);
+    })
+);
 afterAll(() => {
   watcher.close();
 });
 
-test('Should load basic route', async done => {
-  await request(app)
-    .get('/')
-    .expect(200, 'ok');
-
-  expect(indexRoute).toBeCalled();
-
-  done();
-});
-
-test('Should load es6 route', async done => {
-  await request(app)
-    .get('/es6')
-    .expect(200, 'ok');
-
-  expect(es6Route.default).toBeCalled();
-
-  done();
-});
-
-test('Should load router route', async done => {
-  await request(app)
-    .get('/router')
-    .expect(200, 'router');
-
-  expect(routerRoute.useRouter).toBeCalled();
-
-  done();
-});
-
-test('Should load methods from route', async done => {
-  await request(app)
-    .get('/methods')
-    .expect(200, 'get');
-  expect(methodsRoute.get).toBeCalled();
-
-  await request(app)
-    .post('/methods')
-    .expect(200, 'post');
-  expect(methodsRoute.post).toBeCalled();
-
-  await request(app)
-    .put('/methods')
-    .expect(200, 'put');
-  expect(methodsRoute.put).toBeCalled();
-
-  await request(app)
-    .delete('/methods')
-    .expect(200, 'delete');
-  expect(methodsRoute.delete).toBeCalled();
-
-  done();
-});
-
-test('Should load nested index route', async done => {
-  await request(app)
-    .get('/nested/')
-    .expect(200, 'nested');
-
-  expect(nestedIndexRoute).toBeCalled();
-
-  done();
-});
-
-test('Should load nested route', async done => {
-  await request(app)
-    .get('/nested/nest')
-    .expect(200, 'nest');
-
-  expect(nestedRoute).toBeCalled();
-
+test('Should routes map', async done => {
+  expect(testCore.files).toMatchSnapshot();
   done();
 });
 
 test('Should manage routes with hot-reload', async done => {
-  // write inial version
+  // write initial version
   fs.writeFileSync(hotRoutePath, hotRouteSource);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  await request(app)
-    .get('/hot')
-    .expect(200, 'hot-add');
-
-  const initialHotRoute = require(hotRoutePath);
-  expect(initialHotRoute).toBeCalled();
+  // test that route add was called
+  expect(testCore.hotReload.add).toBeCalledWith({
+    routeName: '/hot',
+    routeHandler: require(hotRoutePath),
+    filePath: hotRoutePath,
+    routeType: 'module',
+  });
 
   // reset jest module cache
   jest.resetModules();
@@ -129,28 +65,24 @@ test('Should manage routes with hot-reload', async done => {
   fs.writeFileSync(hotRoutePath, newSource);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  await request(app)
-    .get('/hot')
-    .expect(200, 'hot-change');
-
-  const updatedHotRoute = require(hotRoutePath);
-  expect(updatedHotRoute).toBeCalled();
+  // test that route change was called
+  expect(testCore.hotReload.change).toBeCalledWith({
+    routeName: '/hot',
+    routeHandler: require(hotRoutePath),
+    filePath: hotRoutePath,
+    routeType: 'module',
+  });
 
   // remove route
   fs.unlinkSync(hotRoutePath);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  const {text} = await request(app)
-    .get('/hot')
-    .expect(404);
-
-  expect(text).toContain('Cannot GET /hot');
+  // test that route delete was called
+  expect(testCore.hotReload.delete).toBeCalledWith('/hot');
 
   done();
 });
@@ -160,15 +92,15 @@ test('Should manage nested routes with hot-reload', async done => {
   fs.writeFileSync(hotRouteNestedPath, hotRouteSource);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  await request(app)
-    .get('/nested/hot')
-    .expect(200, 'hot-add');
-
-  const initialHotRoute = require(hotRouteNestedPath);
-  expect(initialHotRoute).toBeCalled();
+  // test that route add was called
+  expect(testCore.hotReload.add).toBeCalledWith({
+    routeName: '/nested/hot',
+    routeHandler: require(hotRouteNestedPath),
+    filePath: hotRouteNestedPath,
+    routeType: 'module',
+  });
 
   // reset jest module cache
   jest.resetModules();
@@ -177,28 +109,24 @@ test('Should manage nested routes with hot-reload', async done => {
   fs.writeFileSync(hotRouteNestedPath, newSource);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  await request(app)
-    .get('/nested/hot')
-    .expect(200, 'hot-change');
-
-  const updatedHotRoute = require(hotRouteNestedPath);
-  expect(updatedHotRoute).toBeCalled();
+  // test that route change was called
+  expect(testCore.hotReload.change).toBeCalledWith({
+    routeName: '/nested/hot',
+    routeHandler: require(hotRouteNestedPath),
+    filePath: hotRouteNestedPath,
+    routeType: 'module',
+  });
 
   // remove route
   fs.unlinkSync(hotRouteNestedPath);
 
   // wait for route to update
-  await sleep(1000);
+  await sleep(500);
 
-  // test that it works
-  const {text} = await request(app)
-    .get('/nested/hot')
-    .expect(404);
-
-  expect(text).toContain('Cannot GET /nested/hot');
+  // test that route delete was called
+  expect(testCore.hotReload.delete).toBeCalledWith('/nested/hot');
 
   done();
 });
