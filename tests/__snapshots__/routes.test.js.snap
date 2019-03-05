@@ -3,7 +3,7 @@
 exports[`Should routes map 1`] = `
 Array [
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/es6.js",
+    "filePath": "/routes/es6.js",
     "routeHandler": Object {
       "default": [MockFunction],
     },
@@ -11,13 +11,13 @@ Array [
     "routeType": "esm",
   },
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/index.js",
+    "filePath": "/routes/index.js",
     "routeHandler": [MockFunction],
     "routeName": "/",
     "routeType": "module",
   },
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/methods.js",
+    "filePath": "/routes/methods.js",
     "routeHandler": Object {
       "delete": [MockFunction],
       "get": [MockFunction],
@@ -28,19 +28,19 @@ Array [
     "routeType": "methods",
   },
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/nested/index.js",
+    "filePath": "/routes/nested/index.js",
     "routeHandler": [MockFunction],
     "routeName": "/nested/",
     "routeType": "module",
   },
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/nested/nest.js",
+    "filePath": "/routes/nested/nest.js",
     "routeHandler": [MockFunction],
     "routeName": "/nested/nest",
     "routeType": "module",
   },
   Object {
-    "filePath": "/mnt/c/Users/yamal/Projects/particlajs/particula-core/tests/fixtures/routes/router.js",
+    "filePath": "/routes/router.js",
     "routeHandler": Object {
       "useRouter": [MockFunction],
     },

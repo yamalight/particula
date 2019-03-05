@@ -1,7 +1,8 @@
 /* eslint-env jest */
 const fs = require('fs');
 const path = require('path');
-jest.spyOn(process, 'cwd').mockReturnValue(path.join(__dirname, 'fixtures'));
+const baseDir = path.join(__dirname, 'fixtures');
+jest.spyOn(process, 'cwd').mockReturnValue(baseDir);
 
 const setupRoutes = require('../src/routes');
 
@@ -39,7 +40,11 @@ afterAll(() => {
 });
 
 test('Should routes map', async done => {
-  expect(testCore.files).toMatchSnapshot();
+  const files = testCore.files.map(file => ({
+    ...file,
+    filePath: file.filePath.replace(baseDir, ''),
+  }));
+  expect(files).toMatchSnapshot();
   done();
 });
 
