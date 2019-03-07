@@ -1,3 +1,7 @@
+# 0.9.0 / 2019-03-07
+
+- Support cores without hot-reload
+
 # 0.8.0 / 2019-03-07
 
 - Make all setup methods async for more flexibility
