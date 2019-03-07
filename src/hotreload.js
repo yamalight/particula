@@ -8,6 +8,10 @@ const setupHotReload = core => {
   if (process.env.NODE_ENV === 'testing') {
     return;
   }
+  // do not setup hot reload when core doesn't support it
+  if (!core.hotReload) {
+    return;
+  }
 
   const watcher = chokidar.watch(routesPath, {ignoreInitial: true});
 
