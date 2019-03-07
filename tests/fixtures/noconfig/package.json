@@ -1,0 +1,7 @@
+{
+  "name": "particula-noconfig-test",
+  "dependencies": {
+    "particula-core-test": "*",
+    "particula-plugin-test": "*"
+  }
+}

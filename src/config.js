@@ -4,9 +4,6 @@ const path = require('path');
 // in-memory config cache
 let config;
 
-// default project config
-const defaultProjectConfig = {plugins: []};
-
 // project paths
 const projectFolder = process.cwd();
 const routesPath = path.join(projectFolder, 'routes');
@@ -23,8 +20,29 @@ const loadConfig = () => {
 
   // if doesn't exist - return default
   if (!fs.existsSync(projectConfigPath)) {
-    config = defaultProjectConfig;
-    return defaultProjectConfig;
+    // load params from package.json
+    const appPackage = require(projectPackagePath);
+
+    // get core
+    const cores = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-core-'));
+    if (cores.length === 0) {
+      console.error('Error! No cores installed!');
+      process.exit(1);
+    }
+    if (cores.length > 2) {
+      console.warn('Warning! You have more than one particula core in dependencies! Only the first one will be used!');
+    }
+    const core = cores[0];
+
+    // get plugins
+    const plugins = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-plugin-'));
+
+    // create new config
+    config = {
+      core,
+      plugins,
+    };
+    return config;
   }
 
   config = require(projectConfigPath);
@@ -52,16 +70,8 @@ const getCore = () => {
   if (core) {
     return core;
   }
-  const appPackage = require(projectPackagePath);
-  const cores = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-core-'));
-  if (cores.length === 0) {
-    console.error('Error! No cores installed!');
-    process.exit(1);
-  }
-  if (cores.length > 2) {
-    console.warn('Warning! You have more than one particula core in dependencies! Only the first one will be used!');
-  }
-  core = require(cores[0]);
+  const config = loadConfig();
+  core = require(config.core);
   return core;
 };
 

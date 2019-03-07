@@ -1,9 +1,9 @@
 /* eslint-env jest */
 const path = require('path');
-jest.spyOn(process, 'cwd').mockReturnValue(path.join(__dirname, 'fixtures'));
+jest.spyOn(process, 'cwd').mockReturnValue(path.join(__dirname, 'fixtures', 'basic'));
 
 const {setupPlugins, postsetupPlugins} = require('../src/config');
-const testPlugin = require('./fixtures/testPlugin');
+const testPlugin = require('./fixtures/basic/testPlugin');
 
 const testCore = {
   setupPlugin: jest.fn(p => p.setup()),

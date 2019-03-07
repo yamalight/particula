@@ -1,15 +1,15 @@
 /* eslint-env jest */
 const fs = require('fs');
 const path = require('path');
-const baseDir = path.join(__dirname, 'fixtures');
+const baseDir = path.join(__dirname, 'fixtures', 'basic');
 jest.spyOn(process, 'cwd').mockReturnValue(baseDir);
 
 const setupRoutes = require('../src/routes');
 
 // load source for hot reload testing
-const hotRoutePath = path.join(__dirname, 'fixtures', 'routes', 'hot.js');
-const hotRouteNestedPath = path.join(__dirname, 'fixtures', 'routes', 'nested', 'hot.js');
-const hotRouteSource = fs.readFileSync(path.join(__dirname, 'fixtures', 'hotreload', 'hot.js')).toString();
+const hotRoutePath = path.join(__dirname, 'fixtures', 'basic', 'routes', 'hot.js');
+const hotRouteNestedPath = path.join(__dirname, 'fixtures', 'basic', 'routes', 'nested', 'hot.js');
+const hotRouteSource = fs.readFileSync(path.join(__dirname, 'fixtures', 'basic', 'hotreload', 'hot.js')).toString();
 
 // sleep util
 const sleep = time => new Promise(r => setTimeout(r, time));

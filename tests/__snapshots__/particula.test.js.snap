@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should setup correct routes 1`] = `
+Array [
+  Object {
+    "filePath": "/routes/index.js",
+    "routeHandler": [MockFunction],
+    "routeName": "/",
+    "routeType": "module",
+  },
+]
+`;
