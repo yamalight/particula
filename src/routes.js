@@ -14,7 +14,7 @@ const filesToRoutes = routesFiles =>
   });
 
 // loads and sets up all user routes
-const setupRoutes = core => {
+const setupRoutes = async core => {
   // if middleware path doesn't exist - throw an error
   if (!fs.existsSync(routesPath)) {
     throw new Error(`Routes path doesn't exist! Please create routes/ folder.`);
@@ -26,7 +26,7 @@ const setupRoutes = core => {
   // setup routes with hot reload if not running in production
   if (process.env.NODE_ENV !== 'production') {
     const routes = filesToRoutes(routesFiles);
-    core.loadRoutes(routes);
+    await core.loadRoutes(routes);
     // setup hot reload
     return setupHotReload(core);
   }
@@ -36,7 +36,7 @@ const setupRoutes = core => {
   for (const fileName of routesFiles) {
     const routeName = fileNameToRoute(fileName);
     const filePath = path.join(routesPath, fileName);
-    core.applyFile({routeName, filePath});
+    await core.applyFile({routeName, filePath});
   }
 };
 

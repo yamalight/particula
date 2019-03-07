@@ -30,8 +30,8 @@ const testCore = {
 let watcher;
 beforeAll(
   () =>
-    new Promise(r => {
-      watcher = setupRoutes(testCore);
+    new Promise(async r => {
+      watcher = await setupRoutes(testCore);
       watcher.on('ready', r);
     })
 );

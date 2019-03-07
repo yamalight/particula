@@ -11,8 +11,8 @@ core.setup();
 // setup function, returns express app
 const setup = async () => {
   await setupPlugins(core);
-  setupMiddleware(core);
-  setupRoutes(core);
+  await setupMiddleware(core);
+  await setupRoutes(core);
   await postsetupPlugins(core);
   return core.postSetup();
 };
