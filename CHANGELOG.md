@@ -1,3 +1,9 @@
+# 0.8.0 / 2019-03-07
+
+- Make all setup methods async for more flexibility
+- Add loading plugins from package.json when no config is present
+- Allow overriding core via config
+
 # 0.7.0 / 2019-03-05
 
 - Rewrite particula to use swappable particula-cores
