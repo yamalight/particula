@@ -21,11 +21,13 @@ The project has two simple goals:
 
 ## Features
 
+- Zero-config setup (with Express as default framework)
 - POST/PUT/DELETE methods enabled by default
 - Helmet enabled by default
 - Async routes support out-of-the-box
 - Routes hot-reload (in development mode)
 - Full error stack traces on request (in development mode)
+- Possibility to swap underlying framework
 
 ## How to use
 
@@ -161,6 +163,13 @@ exports.useRouter = router => {
   router.get('/protected/me', isAuthed, (req, res) => res.send({accepted: true, body: req.body}));
 };
 ```
+
+## Cores
+
+By default, Particula will use Express.js as the underlying framework.  
+This however can be changed by utilizing third-party cores.  
+You can find an example [fastify core on github](https://github.com/particulajs/particula-core-fastify).  
+Note that cores might use different syntax for routes and might not support hot-reload.
 
 ## License
 
