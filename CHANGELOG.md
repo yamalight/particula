@@ -1,3 +1,7 @@
+# 0.10.0 / 2019-03-20
+
+- Integrate express core into particula and use it by default
+
 # 0.9.0 / 2019-03-07
 
 - Support cores without hot-reload
