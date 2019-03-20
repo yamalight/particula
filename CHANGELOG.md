@@ -1,3 +1,7 @@
+# 0.10.1 / 2019-03-20
+
+- Fix npm release files list
+
 # 0.10.0 / 2019-03-20
 
 - Integrate express core into particula and use it by default
