@@ -48,7 +48,9 @@ const loadConfig = () => {
     }
 
     // get plugins
-    const plugins = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-plugin-'));
+    const plugins = Object.keys(appPackage.dependencies)
+      .filter(dep => dep.startsWith('particula-plugin-'))
+      .map(plugin => require(plugin));
 
     // create new config
     config = {
