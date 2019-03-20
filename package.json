@@ -16,10 +16,15 @@
   ],
   "dependencies": {
     "arg": "^4.1.0",
-    "chokidar": "^2.1.2"
+    "body-parser": "^1.18.3",
+    "chokidar": "^2.1.2",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0"
   },
   "devDependencies": {
-    "jest": "^24.1.0"
+    "jest": "^24.1.0",
+    "supertest": "^4.0.2"
   },
   "jest": {
     "testPathIgnorePatterns": [

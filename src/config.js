@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// default config
+const defaultConfig = {
+  core: './core-express',
+  plugins: [],
+};
+
 // in-memory config cache
 let config;
 
@@ -20,19 +26,26 @@ const loadConfig = () => {
 
   // if doesn't exist - return default
   if (!fs.existsSync(projectConfigPath)) {
+    // if there's no package.json - just return default config
+    if (!fs.existsSync(projectPackagePath)) {
+      return defaultConfig;
+    }
+
     // load params from package.json
     const appPackage = require(projectPackagePath);
 
     // get core
     const cores = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-core-'));
+    let core = defaultConfig.core;
     if (cores.length === 0) {
-      console.error('Error! No cores installed!');
-      process.exit(1);
+      console.error('Warning! No cores installed, using default express core.');
     }
     if (cores.length > 2) {
       console.warn('Warning! You have more than one particula core in dependencies! Only the first one will be used!');
     }
-    const core = cores[0];
+    if (cores[0]) {
+      core = cores[0];
+    }
 
     // get plugins
     const plugins = Object.keys(appPackage.dependencies).filter(dep => dep.startsWith('particula-plugin-'));
