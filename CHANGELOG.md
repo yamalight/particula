@@ -1,3 +1,7 @@
+# 0.10.2 / 2019-03-20
+
+- Fix plugin loading from package.json
+
 # 0.10.1 / 2019-03-20
 
 - Fix npm release files list

@@ -1,6 +1,6 @@
 {
   "name": "particula",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "main": "index.js",
   "bin": "bin/particula.js",
   "author": "Tim Ermilov <yamalight@gmail.com>",
