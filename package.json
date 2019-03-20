@@ -12,6 +12,7 @@
   "files": [
     "bin/*.js",
     "src/*.js",
+    "src/core-express/*.js",
     "index.js"
   ],
   "dependencies": {
